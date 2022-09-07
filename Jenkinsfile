@@ -1,54 +1,20 @@
 pipeline {
   agent any
   stages {
-    stage('Build') {
+    stage('ping_test') {
       parallel {
+        stage('ping_test') {
+          steps {
+            sh 'ssh jenkins@ansible \'ansible-playbook -i /extra/ANSIBLE/playbooks/hosts /extra/ANSIBLE/playbooks/pingremote.yml\''
+          }
+        }
+
         stage('Build') {
           steps {
-            echo 'Building docker image'
+            sh 'ssh jenkins@ansible \'ansible-playbook -i /extra/ANSIBLE/playbooks/hosts /extra/ANSIBLE/playbooks/date-time.yml\''
           }
         }
 
-        stage('Test ') {
-          steps {
-            echo 'Validate the docker image'
-          }
-        }
-
-      }
-    }
-
-    stage('Deploy') {
-      parallel {
-        stage('Deploy') {
-          steps {
-            sh '''#!/bin/bash
-echo "This is a test script"
-echo "Date : `date`"
-echo "Hostname : `hostname`"
-echo "IP : `hostname -I`"
-'''
-          }
-        }
-
-        stage('test') {
-          steps {
-            sleep 5
-          }
-        }
-
-        stage('validate') {
-          steps {
-            echo 'validation completed'
-          }
-        }
-
-      }
-    }
-
-    stage('prod') {
-      steps {
-        echo 'Executed on Prod'
       }
     }
 
