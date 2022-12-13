@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: dep-web
+  name: dep-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dep-web
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: dep-web
+    spec:
+      containers:
+      - image: abramdocker/abramnginx:latest
+        name: nginx
+        resources: {}
+status: {}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: dep-web
+  name: dep-web
+spec:
+  ports:
+  - name: nginx-port
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: dep-web
+  type: NodePort
+status:
+  loadBalancer: {}
